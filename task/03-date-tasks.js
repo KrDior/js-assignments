@@ -22,7 +22,7 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-   throw new Error('Not implemented');
+    return Date.parse(value);
 }
 
 /**
@@ -37,7 +37,7 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-   throw new Error('Not implemented');
+    return Date.parse(value);
 }
 
 
@@ -56,7 +56,11 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   throw new Error('Not implemented');
+    const year = date.getFullYear();
+    if (year % 4 !== 0) return false;
+    else if (year % 100 !== 0) return true;
+    else if (year % 400 !== 0) return false;
+    return true;
 }
 
 
@@ -76,14 +80,31 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-   throw new Error('Not implemented');
+    const dif = endDate.getTime() - startDate.getTime();
+    function parseMillisecondsIntoFollowFormat(time) {
+        const hours = time / (1000 * 60 * 60);
+        const fullHours = Math.floor(hours);
+        const hh = fullHours > 9 ? fullHours : '0' + fullHours;
+
+        const minutes = (hours - fullHours) * 60;
+        const fullMinutes = Math.floor(minutes);
+        const mm = fullMinutes > 9 ? fullMinutes : '0' + fullMinutes;
+
+        const seconds = (minutes - fullMinutes) * 60;
+        const fullSeconds = Math.floor(seconds);
+        const ss = fullSeconds > 9 ? fullSeconds : '0' + fullSeconds;
+        const milliseconds = Math.floor(seconds * 1000 - fullSeconds * 1000);
+        const ms = milliseconds > 99 ? milliseconds : milliseconds > 9 ? '0' + milliseconds : '00' + milliseconds;
+        return hh + ':' + mm + ':' + ss + '.' + ms;
+    }
+    return parseMillisecondsIntoFollowFormat(dif);
 }
 
 
 /**
  * Returns the angle (in radians) between the hands of an analog clock for the specified Greenwich time.
  * If you have problem with solution please read: https://en.wikipedia.org/wiki/Clock_angle_problem
- * 
+ *
  * @param {date} date
  * @return {number}
  *
@@ -94,7 +115,18 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-    throw new Error('Not implemented');
+    const hours = date / (1000 * 60 * 60);
+    const fullHours = Math.floor(hours % 12);
+    const minutes = (hours - fullHours) * 60;
+    const fullMinutes = Math.floor(minutes % 60);
+    function clockAngles(h, m) {
+        const hAngle = 0.5 * (h * 60 + m);
+        const mAngle = 6 * m;
+        let angle = Math.abs(hAngle - mAngle);
+        angle = Math.min(angle, 360 - angle);
+        return angle * Math.PI / 180;
+    }
+    return clockAngles(fullHours, fullMinutes);
 }
 
 
