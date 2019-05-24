@@ -173,9 +173,9 @@ function logger(func, logFunc) {
  */
 function partialUsingArguments(fn) {
     throw new Error('Not implemented');
-    }
-
 }
+
+
 
 
 /**
