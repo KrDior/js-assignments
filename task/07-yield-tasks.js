@@ -33,7 +33,17 @@
  *
  */
 function* get99BottlesOfBeer() {
-    throw new Error('Not implemented');
+    let bottle = 99;
+    while (bottle > 2) {
+        yield `${bottle} bottles of beer on the wall, ${bottle} bottles of beer.`
+        yield `Take one down and pass it around, ${--bottle} bottles of beer on the wall.`
+    }
+    yield '2 bottles of beer on the wall, 2 bottles of beer.';
+    yield 'Take one down and pass it around, 1 bottle of beer on the wall.';
+    yield '1 bottle of beer on the wall, 1 bottle of beer.';
+    yield 'Take one down and pass it around, no more bottles of beer on the wall.';
+    yield 'No more bottles of beer on the wall, no more bottles of beer.';
+    yield 'Go to the store and buy some more, 99 bottles of beer on the wall.';
 }
 
 
@@ -47,7 +57,14 @@ function* get99BottlesOfBeer() {
  *
  */
 function* getFibonacciSequence() {
-    throw new Error('Not implemented');
+    let num1 = 0;
+    let num2 = 1;
+    while (true) {
+        let current = num1;
+        num1 = num2;
+        num2 = current + num1;
+        yield current;
+    }
 }
 
 
@@ -82,7 +99,16 @@ function* getFibonacciSequence() {
  *
  */
 function* depthTraversalTree(root) {
-    throw new Error('Not implemented');
+    const stack = [root];
+    while (stack.length > 0) {
+        root = stack.pop();
+        yield root;
+        if (root.children) {
+            for (let child of root.children.reverse()) {
+                stack.push(child);
+            }
+        }
+    }
 }
 
 
@@ -108,7 +134,15 @@ function* depthTraversalTree(root) {
  *
  */
 function* breadthTraversalTree(root) {
-    throw new Error('Not implemented');
+    const queue = [root]
+    for (let node of queue) {
+        yield node;
+        if (node.children) {
+            for (let child of node.children) {
+                queue.push(child);
+            }
+        }
+    }
 }
 
 
@@ -126,7 +160,27 @@ function* breadthTraversalTree(root) {
  *   [ 1, 3, 5, ... ], [ -1 ] => [ -1, 1, 3, 5, ...]
  */
 function* mergeSortedSequences(source1, source2) {
-    throw new Error('Not implemented');
+    source1 = source1();
+    source2 = source2();
+    let first = source1.next();
+    let second = source2.next();
+    while (!first.done && !second.done) {
+        if (first.value < second.value) {
+            yield first.value;
+            first = source1.next();
+        } else {
+            yield second.value;
+            second = source2.next();
+        }
+    }
+    while (!first.done) {
+        yield first.value;
+        first = source1.next();
+    }
+    while (!second.done) {
+        yield second.value;
+        second = source2.next();
+    }
 }
 
 
